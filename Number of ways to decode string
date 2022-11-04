@@ -1,0 +1,81 @@
+import java.io.*;
+import java.util.*;
+class DecodeWays {
+
+    // PART ONE :: ITERATIVE DP
+     public int helperNumWays(String s,int[] dp){
+          int M = 1000000007;
+          int n= s.length();
+          dp[n] =1;  // base case
+          for(int idx=n-1;idx>=0;idx--){
+               if(s.charAt(idx)=='0'){
+                    dp[idx]=0;
+               } 
+               else{
+                    // when digit at curr idx is decoded as single digit.
+                    int decodeSingle = dp[idx+1];
+                    // when digit at curr index is paired with i+1 th digit & decoded as pair. 
+                    int decodePair=0;
+                    if(idx+1<n){  // if there is second letter to form pair
+                         if(s.charAt(idx)== '1' ) {
+                              decodePair = dp[idx+2];
+                         }
+                         else if(s.charAt(idx)=='2' && s.charAt(idx+1)>=48 && s.charAt(idx+1
+                         )<=54){
+                              decodePair = dp[idx+2];
+                         }
+                    }
+                    dp[idx]= (decodeSingle+decodePair)% M;
+               }
+          }
+          return dp[0];
+     }
+
+     // PART 2 -- Recursive DP
+     public int helperNumWays(String s, int idx, int[] dp){
+         int M = 1000000007;
+         int n= s.length();
+          if(idx==n){ 
+               dp[idx] =1;
+               return 1;
+          }  
+          if(s.charAt(idx)=='0'){ 
+               dp[idx]=0;
+               return 0;
+          }
+          if(dp[idx]!=-1){ return dp[idx];}
+          // when digit at curr idx is decoded as single digit.
+          int ansSingleDigit = helperNumWays(s,idx+1,dp);
+          // when digit at curr index is paired with i+1 th digit & decoded as pair. 
+          int ansWithPair=0;
+          if(idx+1<n){
+               if(s.charAt(idx)== '1' ) {
+                    ansWithPair = helperNumWays(s,idx+2,dp);
+               }
+               else if(s.charAt(idx)=='2' && s.charAt(idx+1)>=48 && s.charAt(idx
+               +1)<=54){
+                    ansWithPair = helperNumWays(s,idx+2,dp); 
+               }
+          }
+          dp[idx]= (ansSingleDigit+ansWithPair)% M;
+          return dp[idx];
+     } 
+
+    public int numDecodings(String s) { 
+         int n=s.length();
+         int[] dp =new int[n+1];
+         for(int i=0;i<=n;i++){
+              dp[i]=0;
+         }
+         //int ans= helperNumWays(s,0,dp);   // recursive
+         int ans= helperNumWays(s,dp);   // iterative
+         return ans;
+    }
+    public static void main(String args[]) {
+        Scanner scanner = new Scanner(System.in);
+        String s = scanner.nextLine();
+        scanner.close();
+        int result = new DecodeWays().numDecodings(s);
+        System.out.println(result);
+     }
+}
