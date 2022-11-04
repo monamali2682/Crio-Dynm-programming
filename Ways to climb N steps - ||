@@ -1,0 +1,34 @@
+import java.util.*;
+
+class TripleStep {
+    int numberOfWays(int n) {
+        int M = 1000000007;
+        int[] dp=new int[n+1];
+        for(int i=0;i<=n;i++){
+            dp[i]=0;
+        }
+        dp[0]=1;
+        if(n>=1){
+            dp[1]=1;
+        }
+        if(n>=2){
+            // dp size is n+1 , if n>=2 then only array can contain element at index 2
+            dp[2]=2;
+        }
+        for(int i=3;i<=n;i++){
+            // (a + b + c) % M is the same as ( ( ( a + b ) % M ) + c ) % M. 
+            // Perform % M every time a number is added so as to avoid overflow
+            dp[i]=( (dp[i-1]+dp[i-2])%M + dp[i-3] ) % M;
+        }
+        return dp[n];
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        TripleStep tripleStep = new TripleStep();
+        int result = tripleStep.numberOfWays(n);
+        System.out.println(result);
+        scanner.close();
+    }
+}
