@@ -1,9 +1,13 @@
 //Problem Description
 //Given a set of non-negative integers, and a value sum, determine if there is a subset of the given set with sum equal to given sum.
+//Input format
+//N- length of array
+//T- Target number
+//A- a set of size n
+//Output format
+//If it is possible to add a subset of numbers to make T return 1 else return 0.
 
 import java.util.*;
-
-
 class SubsetSum{
     public static void main(String args[]){
         Scanner sc = new Scanner(System.in);
