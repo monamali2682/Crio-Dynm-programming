@@ -1,0 +1,78 @@
+Given an amount A and the denominations of coins available, determine how many ways there are to make change for the amount. 
+Assume that there is a limitless supply of each coin type.
+There are 4 ways to make change for sum = 4 using coins {1,2,3}: {1,1,1,1}, {1,1,2}, {2,2}, and {1,3}.
+--------------------------------------------------------------------.-.-.-.-.-.-..------------------
+import java.util.*;
+
+class CoinChange {
+	public static void main(String args[]) {
+		Scanner sc = new Scanner(System.in);
+		int A = sc.nextInt();
+		int N = sc.nextInt();
+		int []coins = new int[N];
+		for (int i = 0; i < N; i++) {
+			coins[i] = sc.nextInt();
+		}
+		long ans = coinChange(A, N, coins);
+		System.out.println(ans);
+		sc.close();
+	}
+
+	// recursive DP
+	// public static long helperCoinChange(int amount, int n, int []coins,long[][] dp) {
+	// 	if(n==0){
+	// 		if(amount==0){
+	// 			return 1;
+	// 		}
+	// 		return 0;
+	// 	}
+	// 	if(amount==0){
+	// 		return 1;
+	// 	}
+	// 	if(dp[n][amount]!=-1){return dp[n][amount];}
+	// 	// not pick
+	// 	long pick = helperCoinChange(amount,n-1,coins,dp);
+	// 	// pick
+	// 	long notpick=0;
+	// 	if(coins[n-1]<=amount){
+	// 		notpick=helperCoinChange(amount-coins[n-1],n,coins,dp);
+	// 	}
+	// 	dp[n][amount]=pick+notpick;
+	// 	return dp[n][amount];
+	// }
+
+	// Iterative DP
+	public static long helperCoinChange(int amount, int n, int []coins,long[][] dp) {
+		dp[0][0]=1;
+		for(int j=1;j<=amount;j++){
+			dp[0][j]=0;
+		}
+		for(int i=0;i<=n;i++){
+			dp[i][0]=1;
+		}
+		for(int i=1;i<=n;i++){
+			for(int j=1;j<=amount;j++){
+				// not pick
+			long pick = dp[i-1][j];
+			// pick
+			long notpick=0;
+			if(coins[i-1]<=j){
+				notpick= dp[i][j-coins[i-1]];
+			}
+			dp[i][j]=pick+notpick;
+			}
+		}
+		return dp[n][amount];
+	}
+
+	public static long coinChange(int amount, int n, int []coins) {
+		long[][] dp= new long [n+1][amount+1];
+		for(int i=0;i<=n;i++){
+			for(int j=0;j<=amount;j++){
+				dp[i][j]=-1;
+			}
+		}
+		long ans= helperCoinChange(amount,n,coins,dp);
+		return ans;
+	}
+}
