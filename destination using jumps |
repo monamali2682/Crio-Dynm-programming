@@ -1,0 +1,86 @@
+Given an array of non-negative integers, you are initially positioned at the first position of the array. Each element in the array represents 
+your maximum jump length at that position.
+Determine if you are able to reach the last position.
+- - - - - - - -- - - -- - - -- - - - - -- - -- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -- - -- - -- - -
+import java.util.Scanner;
+
+class JumpGame {
+    // Implement Your Solution Here
+    public String canJump(int[] nums) {
+        int n= nums.length;
+        int[] dp = new int[n];
+        for(int i=0;i<n;i++){
+            dp[i]=-1;
+        }
+        int ans= helperjump(nums,n);
+        if(ans==1){
+            return "true";
+        }
+        return "false";
+    }
+    // recursive passsed 32 test cases || O(N*N)
+    // public int helperjump(int[] nums,int n, int idx,int[] dp){
+    //     if(idx>=n){ return 0;}
+    //     if(idx==n-1){return 1;}
+    //     if(nums[idx]==0){ return 0;}
+    //     if(dp[idx]!=-1){ return dp[idx];}
+    //     int maxJump = nums[idx];
+    //     int ans= 0;
+    //     for(int i=1;i<=maxJump;i++){
+    //         if(helperjump(nums,n,idx+i,dp)==1){
+    //             ans=1;
+    //         }
+    //     }
+    //     return dp[idx]=ans;
+    // }
+
+    //  PART 2 - iterative passed 48 test cases 
+    // bcz where jumpvalue is also N , TC is O(N*N) & fails for large values of N
+    // public int helperjump(int[] nums,int n,int[] dp){
+    //     if(n>=2 && nums[n-2]==0){ return 0;}
+    //     dp[n-1]=1;
+    //     for(int i=n-2;i>=0;i--){
+    //         int maxJump = nums[i];
+    //         dp[i]=0;
+               // here maxIump value can be equal to n , so from each index i,
+               // there can be N possible ways of jumping  
+               // and loop will break when it gets 1 from any of the jumps
+               // but if it dont get 1 it will continue for all k values and 
+               //then for all i values. So for the case in which its not 
+               //possible to reach destination it will try all values of k ad i ===>> O(N*N)
+    //         for(int k=1;k<=maxJump;k++){    
+    //             if(i+k<n && dp[i+k]==1){
+    //                 dp[i]=1;
+    //                 break;   // in recursive DP, we could not apply break so it passed only 32 cases
+    //             }
+    //         }
+    //     }  
+    //     return dp[0];
+    // }
+
+    // part 3 greedy   - Time O(N), space O(1)
+    public int helperjump(int[] nums,int n){
+        int maxJumpIdx =0;
+        if(n==1 && nums[0]==0){ return 1;}  // special case: {0} should return true
+        for(int i=0;i<n;i++){
+            if(maxJumpIdx<=i && nums[i]==0){ return 0;}
+            maxJumpIdx = Math.max(maxJumpIdx,i+nums[i]);
+        }
+        if(maxJumpIdx>=n-1){
+            return 1;
+        }
+        return 0;
+    }
+
+    public static void main(String args[]) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        int nums[] = new int[n];
+        for(int i = 0 ; i < n ;i++) {
+            nums[i] = scanner.nextInt();
+        }
+        String result = new JumpGame().canJump(nums);
+        System.out.println(result);
+        scanner.close();
+    }
+}
