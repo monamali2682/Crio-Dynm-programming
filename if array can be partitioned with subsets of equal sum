@@ -1,0 +1,59 @@
+// was able to find intuition without any help & coded by myself
+Given a non-empty array nums containing only positive integers, find if the array can be partitioned into two subsets such that 
+the sum of elements in both subsets is equal.
+
+import java.util.*;
+
+class EqualSumPartition{
+    public static void main(String args[]){
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int[] arr = new int[n];
+        for(int i=0;i<n;i++){
+            arr[i] = sc.nextInt();
+        }
+        System.out.println(equalSumPartition(n,arr));
+        sc.close();
+    }
+
+    static int equalSumPartition(int n,int[] arr){
+        int allSum=0;
+        for(int i=0;i<n;i++){
+            allSum+=arr[i];
+        }
+        // if allSum is odd, return false;
+        if(allSum%2!=0){return 0;}
+        int target=allSum/2;
+        int[][] dp = new int [n+1][allSum+1];
+            // dp[i][j] --> i elements and prevSum j --> from here can 
+            // you reach  stage when sum=target
+            // So ans we need is dp[0][0];
+    
+        dp[0][target]=0;
+        for(int i=1;i<=n;i++){
+            // base case : when sum = target at any value of n
+            dp[i][target]=1;
+        }
+        for(int j=0;j<target;j++){
+            // base case : when n=n but sum<target
+            dp[n][j]=0;
+        }
+        for(int i=0;i<=n;i++){
+            for(int j=target+1;j<=allSum;j++){
+                // base case : when sum>target at any value of n
+                dp[i][j]=0;
+            }
+        }
+        for(int i=n-1;i>=0;i--){
+            for(int j=0;j<target;j++){
+                if(dp[i+1][j] ==1 || dp[i+1][j+arr[i]]==1){
+                    dp[i][j]=1;
+                }else{
+                    dp[i][j]=0;
+                }
+            }
+        }
+        return dp[0][0];
+    }
+}
+
