@@ -1,0 +1,56 @@
+Problem Description
+Given a rod of length N inches and an array of prices, price[] that contains prices of all pieces of size smaller than N.
+Determine the maximum value obtainable by cutting up the rod and selling the pieces
+input - n integers corresponding to the prices of ith length piece , length  
+
+import java.util.*;
+// unbounded knapsack --> exactly similar to finding maximum value for given weight capacity with unlimited weights & number 
+// of ways to reach target amount with unlimited coins
+
+
+class RodCutting{
+    public static void main(String args[]){
+        Scanner sc = new Scanner(System.in);
+        int n;
+        n=sc.nextInt();
+        int price[]=new int[n];
+        for(int i=0;i<n;i++)
+        {
+            price[i]=sc.nextInt();
+        }
+        System.out.println(rodCutting(n, price));
+        sc.close();
+    }
+
+    static int rodCutting(int len, int price[]){
+        int n= price.length;
+        int[][] dp = new int[n+1][len+1];
+        for(int i=0;i<=n;i++){
+            for(int j=0;j<=len;j++){
+                dp[i][j]=0;
+            }
+        }
+
+        // filling base case when number of elements is zero or lentgh remaining is zero, profit
+        // will bw zero ,, no need to fill as default values are already zero
+        // now filling rest of dp table
+        // i is number of element so index of curr element is i-1
+        for(int i=1;i<=n;i++){
+            for(int j=1;j<=len;j++){
+                // dp[i][j]= Math.max(pick,notpick)
+                int notpick = dp[i-1][j];
+                int pick=0;
+                // i is number of element which is also equal to length of piece which is to be 
+                // pick or not pick , price = [11,9,3,7] , first piece is of 1m whose profit is 
+                // 11, second piece is of 2 m whose profit is 9, and so on.. So nth piece is of n
+                // meter
+                if(i<=j){  //if length of piece < length capacity
+                    pick = dp[i][j-i] + price[i-1];  // unlimited knapsack hence n will not 
+                    //decrease also profit of n-1 th is added 
+                }
+                dp[i][j]= Math.max(pick,notpick);
+            }
+        }
+        return dp[n][len];
+    }
+}
