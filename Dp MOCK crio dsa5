@@ -1,0 +1,54 @@
+# NOTE : this problem is little modification of the problem is it possible to reach destination using jumps 
+Problem Description
+Given an array of positive numbers, where each element represents the maximum number of hops that can be made forward from that element,
+write a program to find ''the minimum number of jumps needed to reach the end of the array'' (starting from the first element). Return -1 if 
+it is not possible to reach the end of the array. If an element is 0, then we cannot jump from that element.
+Note: A Jump indicates moving from one index to another using single or multiple hops where a Hop indicates moving to the immediate next neighbor.
+
+import java.util.*;
+public class MinimumJumps {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        ArrayList<Integer> a = new ArrayList<>();
+
+        for(int i=0;i<n;i++){
+            a.add(sc.nextInt());
+        }
+        int ans = minimumJumps(n,a);
+        System.out.println(ans);
+        sc.close();
+    }
+    static int minimumJumps(int n,ArrayList<Integer> a){
+        int[] dp = new int[n];
+        for(int i=0;i<n;i++){
+            dp[i]=-1;
+        }
+        int ans= helperjump(a,n,dp);
+        return ans;
+    }
+
+    static int helperjump(ArrayList<Integer> nums,int n,int[] dp){
+        dp[n-1]=0;  // ZERO STEPs TO REACH N-1 FROM N-1
+        for(int i=n-2;i>=0;i--){
+            int maxJump = nums.get(i);
+            int minJumps=Integer.MAX_VALUE;
+            //    here maxIump value can be equal to n , so from each index i,
+            //    there can be N possible ways of jumping  
+            //    and loop will break when it gets 1 from any of the jumps
+            //    but if it dont get 1 it will continue for all k values and 
+            //    then for all i values. So for the case in which its not 
+            //    possible to reach destination it will try all values of k ad i ===>> O(N*N)
+            boolean ispossible=false;
+            for(int k=1;k<=maxJump;k++){    
+                if(i+k<n && dp[i+k]!=-1){
+                    ispossible=true;
+                    int jumps=dp[i+k]+1;
+                    minJumps=Math.min(minJumps,jumps);   
+                }
+            }
+            if(ispossible) dp[i]=minJumps;
+        } 
+        return dp[0];
+    }
+}
