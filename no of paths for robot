@@ -1,0 +1,73 @@
+Problem Description
+A robot is located at the top-left corner(1,1) of a m x n grid(m rows , n columns).
+The robot can only move either down or right at any point in time.
+The robot is trying to reach the bottom-right corner(m,n) of the grid.
+How many possible unique paths are there?
+
+import java.io.*;
+import java.util.*;
+
+/* from given hint :
+We can approach this problem mathematically. Since we want to reach (m,n) from (1,1), it is certain that we would take exactly m-1 downward steps and
+exactly n-1 rightward steps. This means that the number of steps we take of each type is fixed, thus, it’s just the order in which we take these steps 
+which determines the answer.
+We have to take a total of (m+n) steps, with m steps of one type (down) and n steps of the other (right). 
+Total number of possible ways with these requirements would be - ( m + n - 2 )! / ( m - 1 )! * ( n - 1 )!
+
+do code using using above approach also
+below code not working
+// public int factorial(int num){
+    //     int factorial=1;
+    //     for(int i = 1; i <= num; ++i)
+    //     {
+    //         // factorial = factorial * i;
+    //         factorial *= i;
+    //     }
+    //     return factorial;
+    // }
+
+    //      int a=factorial( m + n - 2 );
+    //      int b=factorial( m - 1 );
+    //      int c=factorial( n - 1 );
+    //      int ans=(a/(b*c)%M) %M;
+*/
+
+class UniquePaths {
+    public int uniquePaths(int m, int n) {
+        int[][] dp = new int [m][n];
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                dp[i][j]=-1;
+            }
+        }
+        int ans= helper(m,n,dp);
+        return ans;
+    }
+    
+    
+
+    public int helper(int m,int n,int[][] dp){
+        int M = 1000000007;
+        for(int i=0;i<m;i++){
+            dp[i][0]=1;
+        }
+        for(int j=0;j<n;j++){
+            dp[0][j]=1;
+        }
+        for(int i=1;i<m;i++){
+            for(int j=1;j<n;j++){
+                dp[i][j]= (dp[i-1][j] + dp[i][j-1])%M;
+            }
+        }
+        return dp[m-1][n-1];
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        int m = scanner.nextInt();
+        scanner.close();
+        int result = new UniquePaths().uniquePaths(m , n);
+        System.out.println(result);
+    }
+}
