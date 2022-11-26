@@ -1,0 +1,88 @@
+Problem Description
+Given two words word1 and word2, find the minimum number of operations required to convert word1 to word2.
+You have the following 3 operations permitted on a word:
+Insert a character
+Delete a character
+Replace a character
+
+Input format
+First line will have word1.
+Second line will have word2.
+Output format
+Minimum number of operations required to convert word1 to word2.
+Constraints
+1 <= |word1| <= 1000
+1 <= |word2| <= 1000
+
+SOLUTION :
+import java.util.*;
+public class EditDistance {
+    static int editDistance(String s1, String s2){
+        int n= s1.length();
+        int m= s2.length();
+        int[][] dp=new int [n][m];
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                dp[i][j]=-1;
+            }
+        }
+        //int ans= helperMinCost(s1,s2,n-1,m-1,dp);
+        int ans = helperMinCost(s1,s2);
+        return ans;
+    }
+
+    // recursive approach
+    // static int helperMinCost(String s1,String s2,int i,int j,int[][] dp){
+    //     if(i<0 && j<0){return 0;}
+    //     if(i<0){ return j+1;}
+    //     if(j<0) {return i+1;}
+    //     if(dp[i][j]!=-1){ return dp[i][j];}
+    //     if(s1.charAt(i)==s2.charAt(j)){
+    //         return dp[i][j]=helperMinCost(s1,s2,i-1,j-1,dp);
+    //     }
+    //     int delete = helperMinCost(s1,s2,i-1,j,dp);
+    //     int insert = helperMinCost(s1,s2,i,j-1,dp);
+    //     int replace = helperMinCost(s1,s2,i-1,j-1,dp);
+    //     return dp[i][j]= 1+ Math.min(Math.min(delete,insert),replace);
+        
+    // }
+    // iterative approach
+    static int helperMinCost(String s1,String s2){
+        int n= s1.length();
+        int m= s2.length();
+        int[][] dp=new int [n+1][m+1];
+        dp[0][0] =0;
+        for(int i=1;i<=n;i++){
+            dp[i][0]=i;
+        }
+        for(int j=1;j<=m;j++){
+            dp[0][j]=j;
+        }
+        for(int i=1;i<=n;i++){
+            for(int j=1;j<=m;j++){
+                if(s1.charAt(i-1)==s2.charAt(j-1)){
+                    dp[i][j]=dp[i-1][j-1];
+                }
+                else{
+                    int delete = 1+dp[i-1][j];
+                    int insert = 1+dp[i][j-1];
+                    int replace =1+ dp[i-1][j-1];
+                    dp[i][j]=Math.min(Math.min(delete,insert),replace);
+                }
+                
+            }
+        }
+        return dp[n][m];
+        
+    }
+
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s1 = sc.next(); 
+        String s2 = sc.next(); 
+        int ans = editDistance(s1, s2);
+        System.out.print(ans);
+        sc.close();
+    }
+}
